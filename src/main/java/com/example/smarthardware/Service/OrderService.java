@@ -39,21 +39,30 @@ public class OrderService {
         Order order=new Order();
         order.setCartItems(cartItems);
         order.setSmartUser(user);
-        order=orderRepository.save(order);
-        cartItems.forEach(cartItem -> cartItem.setStatus(ItemStatus.PURCHASED));
-        this.cartItemService.saveAll(cartItems);
-        List<CartItemModel> cartItemModels=new ArrayList<>();
-        for (CartItem cartItem:cartItems) {
-            CartItemModel cartItemModel=new CartItemModel();
-            cartItemModel.setCartItemId(cartItem.getId());
-            cartItemModel.setProductName(cartItem.getProduct().getName());
-            cartItemModel.setPrice(cartItem.getProduct().getPrice());
-            cartItemModels.add(cartItemModel);
+        final Order savedOrder=orderRepository.save(order);
+        List<CartItem> managedItems=new ArrayList<>();
+        for (int i = 0; i <cartItems.size() ; i++) {
+            CartItem c=cartItems.get(i);
+            c=this.cartItemService.findById(c.getId()).get();
+            managedItems.add(c);
         }
+        managedItems.forEach(cartItem ->{
+            cartItem.setStatus(ItemStatus.PURCHASED);
+            cartItem.setOrder(savedOrder);
+        });
+
+        this.cartItemService.saveAll(managedItems);
+        List<CartItemModel> cartItemModels=CartItemService.cartItemToModel(managedItems);
 
         OrderSummary orderSummary= new OrderSummary();
         orderSummary.setOrderDate(order.getDateOfPurchase().toString());
         orderSummary.setCartItemModels(cartItemModels);
+        float total=0;
+        for (CartItemModel c:cartItemModels) {
+            total+=Float.parseFloat(c.getPrice());
+        }
+        orderSummary.setTotal(total
+        );
         return orderSummary;
 
     }

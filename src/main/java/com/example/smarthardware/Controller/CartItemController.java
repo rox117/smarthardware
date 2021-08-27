@@ -44,7 +44,7 @@ public class CartItemController {
         return ResponseEntity.ok("product deleted");
     }
 
-    @PostMapping(path = "/checkout}")
+    @PostMapping(path = "/checkout")
     public ResponseEntity<OrderSummary> checkout(@RequestBody List <CartItem> cartItems){
         OrderSummary order=this.orderService.checkout(cartItems);
 

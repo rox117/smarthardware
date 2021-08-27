@@ -25,6 +25,7 @@ public class CartItem {
     @JoinColumn(name = "user_id",referencedColumnName = "id")
     private SmartUser smartUser;
 
+    @ToString.Exclude
     @OneToOne (cascade = CascadeType.ALL)
     @JoinColumn(name = "product_id",referencedColumnName = "id")
     Product product;

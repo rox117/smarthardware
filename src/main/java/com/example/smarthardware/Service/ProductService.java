@@ -33,6 +33,7 @@ public class ProductService {
 
     public List<Product> findProducts(int page,int size,String filtername){
         List<Product> results=null;
+        size=size<1?1:size;
         Pageable pageable = PageRequest.of(page, size);
 
         if (filtername!=null&&!filtername.trim().equals(""))     {

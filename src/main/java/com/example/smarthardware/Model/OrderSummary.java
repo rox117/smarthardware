@@ -8,6 +8,7 @@ import java.util.List;
 public class OrderSummary {
     private String orderDate;
     private List<CartItemModel> cartItemModels;
+    private float total;
 
 
 

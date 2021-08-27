@@ -35,7 +35,7 @@ public class CartItemService {
         cartItem.setStatus(ItemStatus.INCART);
         CartItemModel cartItemModel=new CartItemModel();
         cartItem=this.cartItemRepository.save(cartItem);
-        cartItemModel.setCartItemId(cartItem.getId());
+        cartItemModel.setId(cartItem.getId());
         cartItemModel.setProductName(cartItem.getProduct().getName());
         cartItemModel.setPrice(cartItem.getProduct().getPrice());
         return cartItemModel;
@@ -51,20 +51,24 @@ public class CartItemService {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         SmartUser user=userRepository.findByUserName(auth.getName());
         List<CartItem> cartItems= cartItemRepository.findByStatusAndSmartUser_Id(ItemStatus.INCART,user.getId());
-        List<CartItemModel> cartItemModels=new ArrayList<>();
-        for (CartItem cartItem:cartItems) {
-            CartItemModel cartItemModel=new CartItemModel();
-            cartItemModel.setCartItemId(cartItem.getId());
-            cartItemModel.setProductName(cartItem.getProduct().getName());
-            cartItemModel.setPrice(cartItem.getProduct().getPrice());
-            cartItemModels.add(cartItemModel);
-        }
+        List<CartItemModel> cartItemModels = cartItemToModel(cartItems);
 
         return cartItemModels;
 
 
     }
 
+    static List<CartItemModel> cartItemToModel(List<CartItem> cartItems) {
+        List<CartItemModel> cartItemModels=new ArrayList<>();
+        for (CartItem cartItem:cartItems) {
+            CartItemModel cartItemModel=new CartItemModel();
+            cartItemModel.setId(cartItem.getId());
+            cartItemModel.setProductName(cartItem.getProduct().getName());
+            cartItemModel.setPrice(cartItem.getProduct().getPrice());
+            cartItemModels.add(cartItemModel);
+        }
+        return cartItemModels;
+    }
 
 
 }

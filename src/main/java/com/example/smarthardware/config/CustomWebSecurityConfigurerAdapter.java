@@ -30,8 +30,9 @@ public class CustomWebSecurityConfigurerAdapter extends WebSecurityConfigurerAda
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable().authorizeRequests()
-                .antMatchers("/h2-console").permitAll()
+        http.headers().frameOptions().sameOrigin()
+                .and().csrf().disable().authorizeRequests()
+                .antMatchers("h2-console").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic()

@@ -1,6 +1,7 @@
 package com.example.smarthardware.Entity;
 
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ public class SmartUser {
 
     private String password;
 
+    @ToString.Exclude
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_roles",
@@ -29,7 +31,7 @@ public class SmartUser {
     )
     private Set<Role> roles=new HashSet<>();
 
-
+    @ToString.Exclude
     @OneToMany(mappedBy = "smartUser")
     private List<Order> orders=new ArrayList<>();
 }
